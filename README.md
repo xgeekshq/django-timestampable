@@ -2,7 +2,7 @@
 
 Timestamps and Soft Delete Patterns in Django Models.
 
-1. Add "timestamps" to your INSTALLED_APPS setting like this:
+## Add "timestamps" to your INSTALLED_APPS settings
 
 ```python
 INSTALLED_APPS = [
@@ -11,7 +11,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-2. In your models:
+## Usage
 
 a) For models you want timestamps, just inherit Timestample:
 
@@ -47,7 +47,7 @@ class YourModel(Model, models.Model):
 ```
 
 
-## Soft Deleting
+### Soft Deleting
 
 - To get all objects without the deleted ones:
 
@@ -62,42 +62,42 @@ class YourModel(Model, models.Model):
 ```python queryset = YourModel.objects_with_deleted```
 
 
-### To soft delete an instance
+#### To soft delete an instance
 
 ```python
 some_model = MyModel.objects.first()
 some_model.delete()  # or some_model.delete(hard=False)
 ```
 
-### To restore an instance
+#### To restore an instance
 
 ```python
 some_model = MyModel.objects_deleted.first()
 some_model.restore()
 ```
 
-### To hard delete an instance
+#### To hard delete an instance
 
 ```python
 some_model = MyModel.objects.first()
 some_model.delete(hard=True)
 ```
 
-### To bulk soft delete a queryset
+#### To bulk soft delete a queryset
 
 ```python
 qs = MyModel.objects  # you can also apply filters to bulk delete a subset: qs = MyModel.objects.filter(...)
 qs.delete()  # or some_model.delete(hard=False)
 ```
 
-### To bulk hard delete a queryset
+#### To bulk hard delete a queryset
 
 ```python
 qs = MyModel.objects  # ... bulk hard delete a subset: qs = MyModel.objects.filter(...)
 qs.delete(hard=True)
 ```
 
-### To bulk restore a queryset
+#### To bulk restore a queryset
 
 ```python
 qs = MyModel.objects_deleted  # ... bulk restore a subset: qs = MyModel.objects_deleted.filter(...)
