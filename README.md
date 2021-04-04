@@ -19,7 +19,7 @@ a) For models you want timestamps, just inherit Timestample:
 from timestamps.models import models, Timestample
 
 
-class YourModel(Timestample, models.Model):
+class YourModel(Timestample):
     # your fields here ...
 
 ```
@@ -30,7 +30,7 @@ b) For models you want soft-delete, just inherit SoftDeletes:
 from timestamps.models import models, SoftDeletes
 
 
-class YourModel(SoftDeletes, models.Model):
+class YourModel(SoftDeletes):
     # your fields here ...
 
 ```
@@ -41,7 +41,7 @@ c) If you want both, you can also inherit from Model for shorter convenience:
 from timestamps.models import models, Model
 
 
-class YourModel(Model, models.Model):
+class YourModel(Model):
     # your fields here ...
 
 ```
@@ -51,15 +51,15 @@ class YourModel(Model, models.Model):
 
 - To get all objects without the deleted ones:
 
-```python queryset = YourModel.objects```
+```queryset = YourModel.objects```
 
 - To get only deleted objects:
 
-```python queryset = YourModel.objects_deleted```
+```queryset = YourModel.objects_deleted```
 
 - To get all the objects, including deleted ones:
 
-```python queryset = YourModel.objects_with_deleted```
+```queryset = YourModel.objects_with_deleted```
 
 
 #### To soft delete an instance
