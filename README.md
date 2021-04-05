@@ -143,11 +143,13 @@ The query parameter "permanent" it's case-insensitive and can also be: y, yes, t
 ```python
 # dummy/views.py
 from timestamps.drf import viewsets 
+from .models import Dummy
+from .serializers import DummySerializer
 
 
-class MyModelViewSet(SoftDeleteModelViewSet):
-    queryset = MyModel.objects.all()
-    serializer_class = MyModelSerializer
+class DummyModelViewSet(viewsets.SoftDeleteModelViewSet):
+    queryset = Dummy.objects.all()
+    serializer_class = DummySerializer
 
 ```
 
@@ -165,7 +167,32 @@ urlpatterns = router.urls
 
 ````
 
-#### Note
+#### Note A
+For security reasons, by default, if you pass to the query parameter "?permanent=true", 
+the view will not let you hard-delete, raising a PermissionDenied.
+If you want to enable it on your project, just add to the project settings:
+
+```python
+ALLOW_PERMANENT_BULK_DELETE = True
+```
+
+It's here to prevent users of "forgetting" that the routes also expose hard-delete by default.
+In production, you can set this flag to True and manage hard-deleting using DRF permissions.
+
+
+#### NOTE B
+Bulk actions of restoring and deleting returns no content (status code 204) by default.
+If you want to return a response with the number of deleted/restored objects, just add this setting:
+
+```python
+BULK_ACTIONS_RETURNS_CONTENT = True
+```
+
+Example of returned response: ```{"count": 3 }```
+
+
+
+#### Note C
 If you don't want to expose all the crud operations, be free to register as:
 
 ```python
@@ -175,12 +202,17 @@ router.register(r'dummy', DummyModelViewSet.as_view({'get': 'list_with_deleted'}
 And you can always use the mixins instead and create your APIViews:
 
 ````python
-from timestamps.drf.mixins import ListDeletedModelMixin
 from rest_framework import generic
+from timestamps.drf.mixins import ListDeletedModelMixin
+from .models import Dummy
+from .serializers import DummySerializer
 
 class MyView(ListDeletedModelMixin, generic.GenericAPIView):
+    queryset = Dummy.objects.all()
+    serializer_class = DummySerializer
+    
     def list_deleted(self, request, *args, **kwargs):
-        # your code goes here...
+        # optional. your code goes here...
 
 ````
 
