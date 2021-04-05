@@ -87,7 +87,7 @@ some_model.delete(hard=True)
 
 ```python
 qs = MyModel.objects  # you can also apply filters to bulk delete a subset: qs = MyModel.objects.filter(...)
-qs.delete()  # or some_model.delete(hard=False)
+qs.delete()  # or qs.delete(hard=False)
 ```
 
 #### To bulk hard delete a queryset
@@ -101,5 +101,5 @@ qs.delete(hard=True)
 
 ```python
 qs = MyModel.objects_deleted  # ... bulk restore a subset: qs = MyModel.objects_deleted.filter(...)
-qs.restore()  # or some_model.delete(hard=False)
+qs.restore()  # or qs.delete(hard=False)
 ```
