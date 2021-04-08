@@ -13,7 +13,7 @@ class DefaultRouter(routers.DefaultRouter):
         mapping={
             'get': 'list_deleted',
         },
-        name='{basename}-deleted',
+        name='{basename}-list-deleted',
         detail=False,
         initkwargs={'suffix': 'Deleted'}
     ))
@@ -24,7 +24,7 @@ class DefaultRouter(routers.DefaultRouter):
         mapping={
             'get': 'list_with_deleted',
         },
-        name='{basename}-with-deleted',
+        name='{basename}-list-with-deleted',
         detail=False,
         initkwargs={'suffix': 'With Deleted'}
     ))
@@ -35,7 +35,7 @@ class DefaultRouter(routers.DefaultRouter):
         mapping={
             'patch': 'bulk_restore',
         },
-        name='{basename}-restore',
+        name='{basename}-list-restore',
         detail=False,
         initkwargs={'suffix': 'Restore'}
     ))
@@ -54,7 +54,7 @@ class DefaultRouter(routers.DefaultRouter):
     # retrieve with deleted
     routers.DefaultRouter.routes.insert(6, routers.Route(
         url=r'^{prefix}/with-deleted/{lookup}{trailing_slash}$',
-        name='{basename}-deleted',
+        name='{basename}-with-deleted',
         mapping={
             'get': 'retrieve_with_deleted',
         },
@@ -63,7 +63,7 @@ class DefaultRouter(routers.DefaultRouter):
     ))
 
     # restore
-    routers.DefaultRouter.routes.insert(8, routers.Route(
+    routers.DefaultRouter.routes.insert(7, routers.Route(
         url=r'^{prefix}/{lookup}/restore{trailing_slash}$',
         name='{basename}-restore',
         mapping={

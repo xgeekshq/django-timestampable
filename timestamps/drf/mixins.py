@@ -2,12 +2,11 @@ import aspectlib
 
 from django.conf import settings
 from rest_framework import status, mixins
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 
-from ..utils import str2bool
+from timestamps.drf.utils import is_hard_delete_request
 
 
 class ListDeletedModelMixin:
@@ -46,7 +45,7 @@ class BulkRestoreModelMixin:
         queryset = self.filter_queryset(self.get_queryset())
         count = self.perform_bulk_restore(queryset)
 
-        if getattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False):
+        if getattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False):
             return Response(data={'count': count, }, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -57,28 +56,29 @@ class BulkRestoreModelMixin:
 
 class DestroyModelMixin(mixins.DestroyModelMixin):
     def perform_destroy(self, instance):
-        permanent = str2bool(self.request.query_params.get('permanent'))
-        return instance.delete(hard=permanent)
+        return instance.delete(hard=is_hard_delete_request(self.request))
 
 
 class BulkDestroyModelMixin:
     def perform_bulk_destroy(self, qs):
-        permanent = str2bool(self.request.query_params.get('permanent'))
-
-        if not getattr(settings, 'ALLOW_PERMANENT_BULK_DELETE', False) and permanent:
-            raise PermissionDenied()
-
-        return qs.delete(hard=permanent)
+        return qs.delete(hard=is_hard_delete_request(self.request))
 
     def bulk_destroy(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
         count = self.perform_bulk_destroy(queryset)
 
-        if getattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False):
-            return Response(data={'count': count, }, status=status.HTTP_200_OK)
+        if not getattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False):
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        # a delete operation (hard delete) returns a tuple of:
+        # - total rows deleted (count)
+        # - total rows deleted per table (per_model)
+        if isinstance(count, tuple):
+            count, count_per_model = count
+            return Response(data={'count': count, 'count_per_model': count_per_model, }, status=status.HTTP_200_OK)
+
+        return Response(data={'count': count}, status=status.HTTP_200_OK)
 
 
 def __remove_clause_deleted_at(queryset):
@@ -113,10 +113,14 @@ def __get_queryset(*args, **kwargs):
 
     mixin = {
         'list_with_deleted': ListWithDeletedModelMixin,
-        'destroy': DestroyModelMixin,
         'retrieve_with_deleted': RetrieveWithDeletedModelMixin,
-        'bulk_destroy': BulkDestroyModelMixin,
-    }.get(view.action, None)
+    }
+
+    if is_hard_delete_request(view.request):
+        mixin['destroy'] = DestroyModelMixin
+        mixin['bulk_destroy'] = BulkDestroyModelMixin
+
+    mixin = mixin.get(view.action, None)
 
     if mixin and isinstance(view, mixin):
         queryset = __remove_clause_deleted_at(queryset)

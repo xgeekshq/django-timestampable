@@ -4,6 +4,7 @@ from .mixins import (
     ListDeletedModelMixin,
     ListWithDeletedModelMixin,
     RetrieveDeletedModelMixin,
+    RetrieveWithDeletedModelMixin,
     RestoreModelMixin,
     BulkRestoreModelMixin,
     DestroyModelMixin,
@@ -11,12 +12,13 @@ from .mixins import (
 )
 
 
-class SoftDeleteModelViewSet(ListDeletedModelMixin,
-                             ListWithDeletedModelMixin,
-                             RetrieveDeletedModelMixin,
-                             RestoreModelMixin,
-                             BulkRestoreModelMixin,
-                             DestroyModelMixin,
-                             BulkDestroyModelMixin,
-                             viewsets.ModelViewSet):
+class ModelViewSet(ListDeletedModelMixin,
+                   ListWithDeletedModelMixin,
+                   RetrieveDeletedModelMixin,
+                   RetrieveWithDeletedModelMixin,
+                   RestoreModelMixin,
+                   BulkRestoreModelMixin,
+                   DestroyModelMixin,
+                   BulkDestroyModelMixin,
+                   viewsets.ModelViewSet):
     pass

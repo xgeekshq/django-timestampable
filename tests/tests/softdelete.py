@@ -1,5 +1,5 @@
 from django.test import TransactionTestCase
-from .models import FooSoftDeletes as Foo
+from tests.models import FooSoftDeletes as Foo
 
 
 @Foo.fake_me

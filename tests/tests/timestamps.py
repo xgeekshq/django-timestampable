@@ -1,5 +1,5 @@
 from django.test import TransactionTestCase
-from .models import FooTimestamps as Foo
+from tests.models import FooTimestamps as Foo
 
 
 @Foo.fake_me
