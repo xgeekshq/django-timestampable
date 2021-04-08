@@ -2,7 +2,16 @@
 
 Timestamps and Soft Delete Patterns in Django Models.
 
-## Add "timestamps" to your INSTALLED_APPS settings
+
+## How to install
+
+````bash
+$ pip install django-timestampable
+````
+
+&nbsp;
+
+#### And add "timestamps" to your INSTALLED_APPS settings
 
 ```python
 INSTALLED_APPS = [
