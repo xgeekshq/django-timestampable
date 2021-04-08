@@ -1,0 +1,42 @@
+[
+  {
+    "model": "tests.foo",
+    "pk": "32a6fab2-9e0f-4d23-9a3b-c642470e629d",
+    "fields": {
+      "name": "Reprehenderit nesciunt delectus inventore iste culpa voluptate fuga doloremque voluptas maxime",
+      "created_at": "2021-01-01T00:00:00.000Z",
+      "updated_at": "2021-01-01T00:00:00.000Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "tests.foo",
+    "pk": "0133c730-ed24-445e-9a61-c4bd033cd32f",
+    "fields": {
+      "name": "Cum neque unde reprehenderit nam sint ea consectetur quo reiciendis, vero labore impedit hic nisi",
+      "created_at": "2021-01-01T00:00:00.000Z",
+      "updated_at": "2021-01-01T00:00:00.000Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "tests.foo",
+    "pk": "d1c33a7a-4c59-4fe6-9e96-ab6f8ec2d120",
+    "fields": {
+      "name": "Non aperiam dolorem maiores cupiditate delectus quos, perferendis quas beatae ipsa cumque dolores natus.",
+      "created_at": "2021-01-01T00:00:00.000Z",
+      "updated_at": "2021-01-01T00:00:00.000Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "tests.foo",
+    "pk": "381b0e65-bc13-43de-b216-8673c18aa645",
+    "fields": {
+      "name": "Facilis deleniti maiores a facere minus dolor pariatur, excepturi odit impedit officia sit fuga ipsa inventore possimus, rerum blanditiis voluptate?",
+      "created_at": "2021-01-01T00:00:00.000Z",
+      "updated_at": "2021-01-01T00:00:00.000Z",
+      "deleted_at": "2021-01-01T13:00:00.000Z"
+    }
+  }
+]
