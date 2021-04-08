@@ -11,17 +11,17 @@ class SettingsTestCase(TestCase):
         response = self.client.delete('/')
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
 
-    def test_bulk_response_response_no_content(self):
+    def test_bulk_restore_response_no_content(self):
         setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False)
         response = self.client.patch('/restore/')
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
 
-    def test_permission_denied(self):
+    def test_permission_denied_bulk_hard_delete(self):
         setattr(settings, 'TIMESTAMPS__BULK_HARD_DELETE', False)
         response = self.client.delete('/?permanent=1')
         self.assertEquals(status.HTTP_403_FORBIDDEN, response.status_code)
 
-    def test_hard_delete_objects(self):
+    def test_can_bulk_hard_delete(self):
         setattr(settings, 'TIMESTAMPS__BULK_HARD_DELETE', True)
         setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', True)
 

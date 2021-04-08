@@ -142,10 +142,32 @@ You can have all routes for CRUD operations on this model:
 | GET | /dummy/with-deleted/\<pk\>/ | get an object (by primary key) |
 -----------------------------------
 
-The query parameter "permanent" it's case-insensitive and can also be: y, yes, t, on, 1, n, no, f, off and 0.
+The query parameter "permanent" it's case-sensitive and can also be one of the values:
 
+```python
+truthful_options = [
+    't', 'T',
+    'y', 'Y', 'yes', 'Yes', 'YES',
+    'true', 'True', 'TRUE',
+    'on', 'On', 'ON',
+    '1', 1,
+    True
+]
+```
 
-#### How to implement all of this CRUD operations by default
+```python
+falsely_options = [
+    'f', 'F',
+    'n', 'N', 'no', 'No', 'NO',
+    'false', 'False', 'FALSE',
+    'off', 'Off', 'OFF',
+    '0', 0,
+    'null',
+    False
+]
+```
+
+#### How to expose all CRUD operations
 
 ```python
 # dummy/views.py
@@ -175,7 +197,7 @@ urlpatterns = router.urls
 ````
 
 #### Note A
-For security reasons, by default, if you pass to the query parameter "?permanent=true", 
+For security reasons, by default, if you pass to the query parameter "?permanent=true" on a bulk destroy, 
 the view will not let you hard-delete, raising a PermissionDenied.
 If you want to enable it on your project, just add to the project settings:
 
@@ -183,8 +205,13 @@ If you want to enable it on your project, just add to the project settings:
 TIMESTAMPS__BULK_HARD_DELETE = True
 ```
 
-It's here to prevent users of "forgetting" that the routes also expose hard-delete by default.
+It's here to prevent users of "forgetting" that the routes also expose bulk hard-delete by default.
 In production, you can set this flag to True and manage hard-deleting using DRF permissions.
+
+*Hard-deleting one object at time is allowed by default.*
+
+
+&nbsp;
 
 
 #### NOTE B
@@ -197,6 +224,8 @@ TIMESTAMPS__BULK_RESPONSE_CONTENT = True
 
 Example of returned response: ```{"count": 3 }```
 
+
+&nbsp;
 
 
 #### Note C

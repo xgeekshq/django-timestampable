@@ -56,12 +56,12 @@ class BulkRestoreModelMixin:
 
 class DestroyModelMixin(mixins.DestroyModelMixin):
     def perform_destroy(self, instance):
-        return instance.delete(hard=is_hard_delete_request(self.request))
+        return instance.delete(hard=is_hard_delete_request(self))
 
 
 class BulkDestroyModelMixin:
     def perform_bulk_destroy(self, qs):
-        return qs.delete(hard=is_hard_delete_request(self.request))
+        return qs.delete(hard=is_hard_delete_request(self))
 
     def bulk_destroy(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -116,7 +116,7 @@ def __get_queryset(*args, **kwargs):
         'retrieve_with_deleted': RetrieveWithDeletedModelMixin,
     }
 
-    if is_hard_delete_request(view.request):
+    if is_hard_delete_request(view):
         mixin['destroy'] = DestroyModelMixin
         mixin['bulk_destroy'] = BulkDestroyModelMixin
 
