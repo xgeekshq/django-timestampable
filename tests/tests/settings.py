@@ -7,23 +7,23 @@ class SettingsTestCase(TestCase):
     fixtures = ['foos']
 
     def test_bulk_delete_response_no_content(self):
-        setattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False)
+        setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False)
         response = self.client.delete('/')
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_bulk_response_response_no_content(self):
-        setattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False)
+        setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False)
         response = self.client.patch('/restore/')
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_permission_denied(self):
-        setattr(settings, 'ALLOW_PERMANENT_BULK_DELETE', False)
+        setattr(settings, 'TIMESTAMPS__BULK_HARD_DELETE', False)
         response = self.client.delete('/?permanent=1')
         self.assertEquals(status.HTTP_403_FORBIDDEN, response.status_code)
 
     def test_hard_delete_objects(self):
-        setattr(settings, 'ALLOW_PERMANENT_BULK_DELETE', True)
-        setattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', True)
+        setattr(settings, 'TIMESTAMPS__BULK_HARD_DELETE', True)
+        setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', True)
 
         response = self.client.delete('/?permanent=1')
         self.assertEquals(status.HTTP_200_OK, response.status_code)

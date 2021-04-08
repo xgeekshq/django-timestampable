@@ -11,9 +11,7 @@ test:
 
 coverage:
 	./venv/bin/coverage run --source='timestamps' manage.py test tests
-
-report: coverage
-	./venv/bin/coverage report
+	./venv/bin/coverage report -m
 
 show-urls:
 	./venv/bin/python manage.py show_urls

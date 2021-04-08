@@ -45,7 +45,7 @@ class BulkRestoreModelMixin:
         queryset = self.filter_queryset(self.get_queryset())
         count = self.perform_bulk_restore(queryset)
 
-        if getattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False):
+        if getattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False):
             return Response(data={'count': count, }, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -68,7 +68,7 @@ class BulkDestroyModelMixin:
 
         count = self.perform_bulk_destroy(queryset)
 
-        if not getattr(settings, 'BULK_ACTIONS_RETURNS_CONTENT', False):
+        if not getattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', False):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         # a delete operation (hard delete) returns a tuple of:

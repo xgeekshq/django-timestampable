@@ -1,8 +1,8 @@
-from timestamps.drf.viewsets import SoftDeleteModelViewSet
+from timestamps.drf.viewsets import ModelViewSet
 from .models import Foo
 from .serializers import FooSerializer
 
 
-class FooViewSet(SoftDeleteModelViewSet):
+class FooViewSet(ModelViewSet):
     queryset = Foo.objects.all()
     serializer_class = FooSerializer

@@ -38,7 +38,14 @@ class YourModel(SoftDeletes):
 c) If you want both, you can also inherit from Model for shorter convenience:
 
 ```python
-from timestamps.models import models, Model
+# to this:
+from timestamps.models import models, Model  # explicit import Model (which contains timestamps)
+
+# instead of:
+# from django.db import models
+
+# Explicitly import of "Model" is required
+# because models.Model is the original from Django models module
 
 
 class YourModel(Model):
@@ -142,12 +149,12 @@ The query parameter "permanent" it's case-insensitive and can also be: y, yes, t
 
 ```python
 # dummy/views.py
-from timestamps.drf import viewsets 
+from timestamps.drf import viewsets  # instead of: from rest_framework import viewsets
 from .models import Dummy
 from .serializers import DummySerializer
 
 
-class DummyModelViewSet(viewsets.SoftDeleteModelViewSet):
+class DummyModelViewSet(viewsets.ModelViewSet):
     queryset = Dummy.objects.all()
     serializer_class = DummySerializer
 
@@ -155,7 +162,7 @@ class DummyModelViewSet(viewsets.SoftDeleteModelViewSet):
 
 ````python
 # dummy/urls.py
-from timestamps.drf import routers
+from timestamps.drf import routers  # instead of: from rest_framework import routers
 from .views import DummyModelViewSet
 
 
@@ -173,7 +180,7 @@ the view will not let you hard-delete, raising a PermissionDenied.
 If you want to enable it on your project, just add to the project settings:
 
 ```python
-ALLOW_PERMANENT_BULK_DELETE = True
+TIMESTAMPS__BULK_HARD_DELETE = True
 ```
 
 It's here to prevent users of "forgetting" that the routes also expose hard-delete by default.
@@ -185,7 +192,7 @@ Bulk actions of restoring and deleting returns no content (status code 204) by d
 If you want to return a response with the number of deleted/restored objects, just add this setting:
 
 ```python
-BULK_ACTIONS_RETURNS_CONTENT = True
+TIMESTAMPS__BULK_RESPONSE_CONTENT = True
 ```
 
 Example of returned response: ```{"count": 3 }```
