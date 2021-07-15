@@ -22,13 +22,13 @@ INSTALLED_APPS = [
 
 ## Usage
 
-a) For models you want timestamps, just inherit Timestample:
+a) For models you want timestamps, just inherit Timestampable:
 
 ```python
-from timestamps.models import models, Timestample
+from timestamps.models import models, Timestampable
 
 
-class YourModel(Timestample):
+class YourModel(Timestampable):
     # your fields here ...
 
 ```
