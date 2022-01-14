@@ -5,9 +5,18 @@ Timestamps and Soft Delete Patterns in Django Models.
 
 ## How to install
 
+### Option a)
 ````bash
 $ pip install django-timestampable
 ````
+
+
+### Option b)
+To install django-timestampable with [Django Rest Framework](https://www.django-rest-framework.org/) included:
+````bash
+$ pip install "django-timestampable[drf]"
+````
+*You can use the first option if you have Django Rest Framework already installed.*
 
 &nbsp;
 
@@ -16,6 +25,15 @@ $ pip install django-timestampable
 ```python
 INSTALLED_APPS = [
     # ...
+    'timestamps',
+]
+```
+
+#### Or, if you installed with [Django Rest Framework](https://www.django-rest-framework.org/):
+```python
+INSTALLED_APPS = [
+    # ...
+    'rest_framework',
     'timestamps',
 ]
 ```
