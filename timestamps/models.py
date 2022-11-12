@@ -12,7 +12,7 @@ class Timestampable(models.Model):
 
 
 class SoftDeletes(models.Model):
-    deleted_at = models.DateTimeField(null=True)
+    deleted_at = models.DateTimeField(null=True, editable=False)
 
     objects = SoftDeleteManager()
     objects_deleted = SoftDeleteManager(only_deleted=True)
