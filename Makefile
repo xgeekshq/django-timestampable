@@ -3,7 +3,7 @@ requirements: requirements.txt
 	./.venv/bin/pip install -r requirements.txt
 
 clean:
-	find . -type f -name ‘*.pyc’ -delete
+	find . -type f -name '*.pyc' -delete
 	rm -rf .venv
 
 test:

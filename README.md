@@ -138,12 +138,66 @@ qs = MyModel.objects_deleted  # ... bulk restore a subset: qs = MyModel.objects_
 qs.restore()  # or qs.delete(hard=False)
 ```
 
-
 ---
 
+### Signals for Soft Deleting and Restoring
+
+You have 4 signals available that you can listen in your project:
+
+- pre_soft_delete
+- post_soft_delete
+- pre_restore
+- post_restore
+
+To use them, just import the signals and register listeners for them. Eg:
+
+#### Pre Soft Delete
+
+```python3
+from timestamps.signals import pre_soft_delete
+from django.dispatch import receiver
+
+@receiver(pre_soft_delete)
+def on_pre_soft_delete(sender, instance, **kwargs):
+    print(f"Model {sender} with id {instance.pk} will be deleted!")
+```
+
+#### Post Soft Delete
+
+```python3
+from timestamps.signals import post_soft_delete
+from django.dispatch import receiver
+
+@receiver(post_soft_delete)
+def on_post_soft_delete(sender, instance, **kwargs):
+    print(f"Model {sender} with id {instance.pk} was deleted at {instance.deleted_at}!")
+```
+
+#### Pre Restore
+
+```python3
+from timestamps.signals import pre_restore
+from django.dispatch import receiver
+
+@receiver(pre_restore)
+def on_pre_restore(sender, instance, **kwargs):
+    print(f"Model {sender} with id {instance.pk} deleted at {instance.deleted_at} will be restored!")
+```
+
+#### Post Restore
+
+```python3
+from timestamps.signals import post_restore
+from django.dispatch import receiver
+
+@receiver(post_restore)
+def on_post_restore(sender, instance, **kwargs):
+    print(f"Model {sender} with id {instance.pk} restored!")
+```
 
 ### If you're using DRF
-you can use the SoftDeleteModelViewSet along with DefaultRouter present in this package
+
+You can use the SoftDeleteModelViewSet along with DefaultRouter present in this package
 and you will have access to a complete CRUD on soft deleted objects as well.
 This 2 classes allows you to expose:
 
