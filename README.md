@@ -138,7 +138,11 @@ qs = MyModel.objects_deleted  # ... bulk restore a subset: qs = MyModel.objects_
 qs.restore()  # or qs.delete(hard=False)
 ```
 
+&nbsp;
+
 ---
+
+&nbsp;
 
 ### Signals for Soft Deleting and Restoring
 
@@ -195,6 +199,12 @@ def on_post_restore(sender, instance, **kwargs):
     print(f"Model {sender} with id {instance.pk} restored!")
 ```
 
+&nbsp;
+
+---
+
+&nbsp;
+
 ### If you're using DRF
 
 You can use the SoftDeleteModelViewSet along with DefaultRouter present in this package
@@ -204,7 +214,6 @@ This 2 classes allows you to expose:
 Consider a Dummy Model that inherits from SoftDelete.
 
 You can have all routes for CRUD operations on this model:
-
 
 | VERB | URL PATH | DESCRIPTION |
 | ---- | -------- | ----------- |
@@ -221,7 +230,8 @@ You can have all routes for CRUD operations on this model:
 | GET | /dummy/deleted/\<pk\>/ | gets a deleted object (by primary key) |
 | GET | /dummy/with-deleted/ | get all objects, deleted included |
 | GET | /dummy/with-deleted/\<pk\>/ | get an object (by primary key) |
------------------------------------
+
+&nbsp;
 
 The query parameter "permanent" it's case-sensitive and can also be one of the values:
 
@@ -278,6 +288,7 @@ urlpatterns = router.urls
 ````
 
 #### Note A
+
 For security reasons, by default, if you pass to the query parameter "?permanent=true" on a bulk destroy, 
 the view will not let you hard-delete, raising a PermissionDenied.
 If you want to enable it on your project, just add to the project settings:
@@ -291,11 +302,10 @@ In production, you can set this flag to True and manage hard-deleting using DRF 
 
 *Hard-deleting one object at time is allowed by default.*
 
-
 &nbsp;
 
-
 #### NOTE B
+
 Bulk actions of restoring and deleting returns no content (status code 204) by default.
 If you want to return a response with the number of deleted/restored objects, just add this setting:
 
@@ -305,11 +315,10 @@ TIMESTAMPS__BULK_RESPONSE_CONTENT = True
 
 Example of returned response: ```{"count": 3 }```
 
-
 &nbsp;
 
-
 #### Note C
+
 If you don't want to expose all the crud operations, be free to register as:
 
 ```python
@@ -332,7 +341,6 @@ class MyView(ListDeletedModelMixin, generic.GenericAPIView):
         # optional. your code goes here...
 
 ````
-
 
 Internally, the ListDeletedModelMixin just calls the method ListModelMixin.list(self, request, *args, **kwargs).
 The method of determining if the queryset must get all objects, only the deleted or all with deleted is done using AOP,
