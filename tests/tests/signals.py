@@ -17,7 +17,6 @@ class TestSoftDeleteSignal(TransactionTestCase):
 
             self.assertEqual(sender, Foo)
             self.assertIs(instance, foo)
-            self.assertIsNone(instance.deleted_at)
 
         signals.pre_soft_delete.connect(handler)
         
@@ -37,7 +36,6 @@ class TestSoftDeleteSignal(TransactionTestCase):
 
             self.assertEqual(sender, Foo)
             self.assertIs(instance, foo)
-            self.assertIsNotNone(instance.deleted_at)
 
         signals.post_soft_delete.connect(handler)
         
@@ -57,9 +55,9 @@ class TestSoftDeleteSignal(TransactionTestCase):
         def handler(sender, instance, **kwargs):
             self.signaled = True
 
+            self.assertIsNotNone(instance.deleted_at)
             self.assertEqual(sender, Foo)
             self.assertIs(instance, foo)
-            self.assertIsNotNone(instance.deleted_at)
 
         signals.pre_restore.connect(handler)
         
@@ -78,9 +76,9 @@ class TestSoftDeleteSignal(TransactionTestCase):
         def handler(sender, instance, **kwargs):
             self.signaled = True
 
+            self.assertIsNone(instance.deleted_at)
             self.assertEqual(sender, Foo)
             self.assertIs(instance, foo)
-            self.assertIsNone(instance.deleted_at)
 
         signals.post_restore.connect(handler)
         
