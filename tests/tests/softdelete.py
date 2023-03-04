@@ -16,6 +16,42 @@ class SoftDeletesTestCase(TransactionTestCase):
         # querying table again to check if object still exists
         self.assertEqual(1, Foo.objects_with_deleted.count())
 
+    def test_soft_delete_2(self):
+        foo = Foo()
+
+        foo.save()
+        self.assertIsNone(foo.deleted_at)
+
+        foo.soft_delete()
+        self.assertIsNotNone(foo.deleted_at)
+
+        # querying table again to check if object still exists
+        self.assertEqual(1, Foo.objects_with_deleted.count())
+
+    def test_hard_delete(self):
+        foo = Foo()
+
+        foo.save()
+        self.assertIsNone(foo.deleted_at)
+
+        foo.delete(hard=True)
+        self.assertIsNone(foo.deleted_at)
+
+        # querying table again to check if object still exists
+        self.assertEqual(0, Foo.objects_with_deleted.count())
+
+    def test_hard_delete_2(self):
+        foo = Foo()
+
+        foo.save()
+        self.assertIsNone(foo.deleted_at)
+
+        foo.hard_delete()
+        self.assertIsNone(foo.deleted_at)
+
+        # querying table again to check if object still exists
+        self.assertEqual(0, Foo.objects_with_deleted.count())
+
     def test_restore(self):
         foo = Foo()
         foo.save()
@@ -70,6 +106,16 @@ class SoftDeletesTestCase(TransactionTestCase):
         self.assertEquals(0, Foo.objects.count())
         self.assertEquals(2, Foo.objects_deleted.count())
 
+    def test_bulk_soft_delete_2(self):
+        Foo().save()
+        Foo().save()
+
+        self.assertEquals(2, Foo.objects.count())
+
+        Foo.objects.soft_delete()
+        self.assertEquals(0, Foo.objects.count())
+        self.assertEquals(2, Foo.objects_deleted.count())
+
     def test_bulk_hard_delete(self):
         Foo().save()
         Foo().save()
@@ -77,6 +123,15 @@ class SoftDeletesTestCase(TransactionTestCase):
         self.assertEquals(2, Foo.objects.count())
 
         Foo.objects.delete(hard=True)
+        self.assertEquals(0, Foo.objects_with_deleted.count())
+
+    def test_bulk_hard_delete_2(self):
+        Foo().save()
+        Foo().save()
+
+        self.assertEquals(2, Foo.objects.count())
+
+        Foo.objects.hard_delete()
         self.assertEquals(0, Foo.objects_with_deleted.count())
 
     def test_bulk_restore(self):
