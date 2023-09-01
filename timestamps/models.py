@@ -1,18 +1,19 @@
 from django.db import models, router
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from .managers import SoftDeleteManager
 from . import signals
 
 class Timestampable(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created_at"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated_at"))
 
     class Meta:
         abstract = True
 
 
 class SoftDeletes(models.Model):
-    deleted_at = models.DateTimeField(null=True, blank=True)
+    deleted_at = models.DateTimeField(null=True, blank=True, verbose_name=_("deleted_at"))
 
     objects = SoftDeleteManager()
     objects_deleted = SoftDeleteManager(only_deleted=True)
@@ -32,7 +33,7 @@ class SoftDeletes(models.Model):
             instance=self,
             using=using
         )
-        
+
         self.deleted_at = timezone.now()
         self.save()
 
@@ -44,7 +45,7 @@ class SoftDeletes(models.Model):
 
     def soft_delete(self) -> None:
         self.delete(hard=False)
-    
+
     def hard_delete(self, using=None, keep_parents: bool = False):
         return self.delete(using, keep_parents, hard=True)
 
