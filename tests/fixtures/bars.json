@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "model": "tests.Bar",
+        "pk": "14e6c142-580e-4c32-815c-ee347b03b567",
+        "fields": {
+            "name": "megabar",
+            "foo": "32a6fab2-9e0f-4d23-9a3b-c642470e629d",
+            "created_at": "2021-01-01T00:00:00.000Z",
+            "updated_at": "2021-01-01T00:00:00.000Z",
+            "deleted_at": null
+        }
+    },
+    {
+        "model": "tests.Bar",
+        "pk": "6ee25ce6-4c53-4c7a-9283-078b11e8fe97",
+        "fields": {
+            "name": "superbar",
+            "foo": "381b0e65-bc13-43de-b216-8673c18aa645",
+            "created_at": "2021-01-01T00:00:00.000Z",
+            "updated_at": "2021-01-01T00:00:00.000Z",
+            "deleted_at": "2021-01-01T13:00:00.000Z"
+        }
+    }
+]

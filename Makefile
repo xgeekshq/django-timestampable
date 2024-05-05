@@ -25,4 +25,4 @@ pypi: build
 	./.venv/bin/python -m twine upload dist/* --config-file ~/.pypirc
 
 test-pypi: build
-	./.venv/bin/python -m twine upload --repository testpypi dist/* --config-file ~/.pypirc
+	./.venv/bin/python -m twine upload --verbose --repository testpypi dist/* --config-file ~/.pypirc

@@ -111,6 +111,9 @@ def __get_queryset(*args, **kwargs):
 
     view = args[0]
 
+    if not hasattr(view, 'action'):
+        yield aspectlib.Return(queryset) 
+
     mixin = {
         'list_with_deleted': ListWithDeletedModelMixin,
         'retrieve_with_deleted': RetrieveWithDeletedModelMixin,
