@@ -349,3 +349,11 @@ to the correct queryset the view needs.
 
 If you don't inherit from generic.GenericAPIView, you must be aware that, for this type of scenarios,
 you need to override the method get_queryset() to return the objects that matches your needs.
+
+---
+
+Thank you for reading!
+
+If you liked this library you can support me by [buying me a coffee](https://www.buymeacoffee.com/dmp593).
+
+![https://www.buymeacoffee.com/dmp593](bmc_qr.png "Buy Me a Coffee")
