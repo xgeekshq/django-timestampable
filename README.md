@@ -353,7 +353,3 @@ you need to override the method get_queryset() to return the objects that matche
 ---
 
 Thank you for reading!
-
-If you liked this library you can support me by [buying me a coffee](https://www.buymeacoffee.com/dmp593).
-
-![https://www.buymeacoffee.com/dmp593](bmc_qr.png "Buy Me a Coffee")
