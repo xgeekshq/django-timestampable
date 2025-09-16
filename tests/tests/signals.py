@@ -1,10 +1,9 @@
 from django.test import TransactionTestCase
 from timestamps import signals
 
-from tests.models import FooSoftDeletes as Foo
+from tests.models import Foo
 
 
-@Foo.fake_me
 class TestSoftDeleteSignal(TransactionTestCase):
     def test_pre_soft_delete(self):
         self.signaled = False
@@ -20,7 +19,7 @@ class TestSoftDeleteSignal(TransactionTestCase):
             self.assertIsNone(instance.deleted_at)
 
         signals.pre_soft_delete.connect(handler)
-        
+
         foo.soft_delete()
         self.assertTrue(self.signaled)
 
