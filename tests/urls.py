@@ -7,7 +7,9 @@ from .views import BarRetrieveAPIView
 router = routers.DefaultRouter()
 router.register(r'foos', FooViewSet, basename='foos')
 
-foourls = router.urls
-barurls = [ path('bars/<uuid:pk>/', BarRetrieveAPIView.as_view()), ]
+foo_urls = router.urls
+bar_urls = [
+    path('bars/<uuid:pk>/', BarRetrieveAPIView.as_view()),
+]
 
-urlpatterns = foourls + barurls
+urlpatterns = foo_urls + bar_urls

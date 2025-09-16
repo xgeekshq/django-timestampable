@@ -13,37 +13,37 @@ class SoftDeleteModelViewSetTestCase(TestCase):
 
     def test_get_objects(self):
         response = self.client.get('/foos/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         results = response.json()
-        self.assertEquals(3, len(results))
+        self.assertEqual(3, len(results))
 
     def test_get_objects_deleted(self):
         response = self.client.get('/foos/deleted/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         results = response.json()
-        self.assertEquals(1, len(results))
+        self.assertEqual(1, len(results))
 
     def test_get_objects_with_deleted(self):
         response = self.client.get('/foos/with-deleted/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         results = response.json()
-        self.assertEquals(4, len(results))
+        self.assertEqual(4, len(results))
 
     def test_get_object_deleted(self):
         pk_active = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
         pk_deleted = '381b0e65-bc13-43de-b216-8673c18aa645'
 
         response = self.client.get('/foos/deleted/{}/'.format(pk_active))
-        self.assertEquals(status.HTTP_404_NOT_FOUND, response.status_code)
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
 
         response = self.client.get('/foos/deleted/{}/'.format(pk_deleted))
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         response_data = response.json()
-        self.assertEquals(pk_deleted, response_data.get('id'))
+        self.assertEqual(pk_deleted, response_data.get('id'))
 
     def test_get_object_with_deleted(self):
         pk_active = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
@@ -51,35 +51,35 @@ class SoftDeleteModelViewSetTestCase(TestCase):
 
         for pk in [pk_active, pk_deleted]:
             response = self.client.get('/foos/with-deleted/{}/'.format(pk))
-            self.assertEquals(status.HTTP_200_OK, response.status_code)
+            self.assertEqual(status.HTTP_200_OK, response.status_code)
 
             response_data = response.json()
-            self.assertEquals(pk, response_data.get('id'))
+            self.assertEqual(pk, response_data.get('id'))
 
     def test_delete_one_object(self):
         pk = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
 
         response = self.client.delete('/foos/{}/'.format(pk))
-        self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_soft_delete_one_object(self):
         pk = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
 
         response = self.client.delete('/foos/{}/?permanent=0'.format(pk))
-        self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_hard_delete_one_object(self):
         pk = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
 
         response = self.client.delete('/foos/{}/?permanent=1'.format(pk))
-        self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_delete_one_object_with_permanent_invalid(self):
         pk = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
 
         for invalid_option in ['123', 'abc', 'a0s8', ' ']:
             response = self.client.delete('/foos/{}/?permanent={}'.format(pk, invalid_option))
-            self.assertEquals(status.HTTP_400_BAD_REQUEST, response.status_code)
+            self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
     def test_delete_with_truthful_permanent_options(self):
         setattr(settings, 'TIMESTAMPS__BULK_HARD_DELETE', True)
@@ -99,7 +99,7 @@ class SoftDeleteModelViewSetTestCase(TestCase):
             foo.save()
 
             response = self.client.delete('/foos/{}/?permanent={}'.format(foo.pk, option))
-            self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code, 'invalid option: {}'.format(option))
+            self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code, 'invalid option: {}'.format(option))
 
     def test_delete_with_falsy_permanent_options(self):
         pk = '32a6fab2-9e0f-4d23-9a3b-c642470e629d'
@@ -116,28 +116,28 @@ class SoftDeleteModelViewSetTestCase(TestCase):
 
         for option in falsely_options:
             response = self.client.delete('/foos/{}/?permanent={}'.format(pk, option))
-            self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code, 'invalid option: {}'.format(option))
+            self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code, 'invalid option: {}'.format(option))
 
             response = self.client.patch('/foos/{}/restore/'.format(pk))
-            self.assertEquals(status.HTTP_200_OK, response.status_code)
+            self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_restore_one_object(self):
         pk = '381b0e65-bc13-43de-b216-8673c18aa645'
 
         response = self.client.patch('/foos/{}/restore/'.format(pk))
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         response_data = response.json()
-        self.assertEquals(pk, response_data.get('id'))
+        self.assertEqual(pk, response_data.get('id'))
 
     def test_delete_objects(self):
         setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', True)
 
         response = self.client.delete('/foos/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         response_data = response.json()
-        self.assertEquals(3, response_data.get('count'))
+        self.assertEqual(3, response_data.get('count'))
 
     def test_restore_objects(self):
         setattr(settings, 'TIMESTAMPS__BULK_RESPONSE_CONTENT', True)
@@ -145,10 +145,10 @@ class SoftDeleteModelViewSetTestCase(TestCase):
         self.client.delete('/foos/')
 
         response = self.client.patch('/foos/restore/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         response_data = response.json()
-        self.assertEquals(4, response_data.get('count'))
+        self.assertEqual(4, response_data.get('count'))
 
 
 class ViewsWithNoActionTestCase(TestCase):
@@ -158,13 +158,13 @@ class ViewsWithNoActionTestCase(TestCase):
         uuid = "14e6c142-580e-4c32-815c-ee347b03b567"
 
         response = self.client.get(f'/bars/{uuid}/')
-        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         result = response.json()
-        self.assertEquals(uuid, result.get('id'))
+        self.assertEqual(uuid, result.get('id'))
 
     def test_get_object_deleted_object_returns_404(self):
         uuid = "6ee25ce6-4c53-4c7a-9283-078b11e8fe97"
 
         response = self.client.get(f'/bars/{uuid}/')
-        self.assertEquals(status.HTTP_404_NOT_FOUND, response.status_code)
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)

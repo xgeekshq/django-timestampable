@@ -6,4 +6,3 @@ from .serializers import BarSerializer
 class BarRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Bar.objects.all()
     serializer_class = BarSerializer
-

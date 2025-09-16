@@ -2,25 +2,39 @@
 
 Timestamps and Soft Delete Patterns in Django Models.
 
+## ✅ Summary
 
-## How to install
+- Add timestamps and soft delete to any model with a single line of code.
+- Manage deleted objects effortlessly with built-in managers and custom querysets.
+- Seamlessly integrate into existing models without breaking changes or refactoring your app/project
+  - ⭐ no need to modify the default objects manager or queryset ⭐
+- Hook into lifecycle events with signals.
+- Get full CRUD support in DRF, including restore endpoints.
+- Configure safety features such as bulk hard delete and bulk responses.
 
-### Option a)
+## 🚀 Installation
+
+### Without DRF
+
 ````bash
 $ pip install django-timestampable
 ````
 
+### With DRF support
 
-### Option b)
 To install django-timestampable with [Django Rest Framework](https://www.django-rest-framework.org/) included:
+
 ````bash
 $ pip install "django-timestampable[drf]"
 ````
+
 *You can use the first option if you have Django Rest Framework already installed.*
 
 &nbsp;
 
-#### And add "timestamps" to your INSTALLED_APPS settings
+## ⚙️ Configuration
+
+Add `timestamps` to your `INSTALLED_APPS` in your Django settings:
 
 ```python
 INSTALLED_APPS = [
@@ -29,7 +43,8 @@ INSTALLED_APPS = [
 ]
 ```
 
-#### Or, if you installed with [Django Rest Framework](https://www.django-rest-framework.org/):
+### Or, if you installed with [Django Rest Framework](https://www.django-rest-framework.org/):
+
 ```python
 INSTALLED_APPS = [
     # ...
@@ -38,63 +53,60 @@ INSTALLED_APPS = [
 ]
 ```
 
-## Usage
+## 🛠 Usage
 
-a) For models you want timestamps, just inherit Timestampable:
+a) For Timestamps
 
 ```python
 from timestamps.models import models, Timestampable
-
 
 class YourModel(Timestampable):
     # your fields here ...
 
 ```
 
-b) For models you want soft-delete, just inherit SoftDeletes:
+b) For Soft Deletes
 
 ```python
 from timestamps.models import models, SoftDeletes
-
 
 class YourModel(SoftDeletes):
     # your fields here ...
 
 ```
 
-c) If you want both, you can also inherit from Model for shorter convenience:
+c) Combine both Timestamps and Soft Deletes
 
 ```python
 # to this:
-from timestamps.models import models, Model  # explicit import Model (which contains timestamps)
-
-# instead of:
-# from django.db import models
-
-# Explicitly import of "Model" is required
-# because models.Model is the original from Django models module
-
+from timestamps.models import models, Model  # shortcut including both
 
 class YourModel(Model):
     # your fields here ...
 
 ```
 
+**Note**: Always import Model from timestamps.models explicitly. models.Model from Django is untouched.
 
-### Soft Deleting
+## 🧹 Soft Deleting
 
-- To get all objects without the deleted ones:
+### Query managers
+
+When you use SoftDeletes or Model, you have 3 query managers available:
+
+- Active objects only (without soft deleted objects):
 
 ```queryset = YourModel.objects```
 
-- To get only deleted objects:
+- Deleted objects only:
 
 ```queryset = YourModel.objects_deleted```
 
-- To get all the objects, including deleted ones:
+- All objects (active + deleted):
 
 ```queryset = YourModel.objects_with_deleted```
 
+### Operations
 
 #### To soft delete an instance
 
@@ -138,15 +150,9 @@ qs = MyModel.objects_deleted  # ... bulk restore a subset: qs = MyModel.objects_
 qs.restore()  # or qs.delete(hard=False)
 ```
 
-&nbsp;
+## 📡 Signals
 
----
-
-&nbsp;
-
-### Signals for Soft Deleting and Restoring
-
-You have 4 signals available that you can listen in your project:
+Four signals are available:
 
 - pre_soft_delete
 - post_soft_delete
@@ -155,7 +161,7 @@ You have 4 signals available that you can listen in your project:
 
 To use them, just import the signals and register listeners for them. Eg:
 
-#### Pre Soft Delete
+### Pre Soft Delete
 
 ```python3
 from timestamps.signals import pre_soft_delete
@@ -166,7 +172,7 @@ def on_pre_soft_delete(sender, instance, **kwargs):
     print(f"Model {sender} with id {instance.pk} will be deleted!")
 ```
 
-#### Post Soft Delete
+### Post Soft Delete
 
 ```python3
 from timestamps.signals import post_soft_delete
@@ -177,7 +183,7 @@ def on_post_soft_delete(sender, instance, **kwargs):
     print(f"Model {sender} with id {instance.pk} was deleted at {instance.deleted_at}!")
 ```
 
-#### Pre Restore
+### Pre Restore
 
 ```python3
 from timestamps.signals import pre_restore
@@ -188,7 +194,7 @@ def on_pre_restore(sender, instance, **kwargs):
     print(f"Model {sender} with id {instance.pk} deleted at {instance.deleted_at} will be restored!")
 ```
 
-#### Post Restore
+### Post Restore
 
 ```python3
 from timestamps.signals import post_restore
@@ -199,13 +205,7 @@ def on_post_restore(sender, instance, **kwargs):
     print(f"Model {sender} with id {instance.pk} restored!")
 ```
 
-&nbsp;
-
----
-
-&nbsp;
-
-### If you're using DRF
+## 🌐 Using with DRF
 
 You can use the SoftDeleteModelViewSet along with DefaultRouter present in this package
 and you will have access to a complete CRUD on soft deleted objects as well.
@@ -258,7 +258,7 @@ falsely_options = [
 ]
 ```
 
-#### How to expose all CRUD operations
+### How to expose all CRUD operations
 
 ```python
 # dummy/views.py
@@ -287,7 +287,9 @@ urlpatterns = router.urls
 
 ````
 
-#### Note A
+## ⚠️ Notes & Settings
+
+### Note A - About Bulk Hard Delete
 
 For security reasons, by default, if you pass to the query parameter "?permanent=true" on a bulk destroy, 
 the view will not let you hard-delete, raising a PermissionDenied.
@@ -304,7 +306,7 @@ In production, you can set this flag to True and manage hard-deleting using DRF 
 
 &nbsp;
 
-#### NOTE B
+### Note B - About Bulk Response
 
 Bulk actions of restoring and deleting returns no content (status code 204) by default.
 If you want to return a response with the number of deleted/restored objects, just add this setting:
@@ -317,7 +319,7 @@ Example of returned response: ```{"count": 3 }```
 
 &nbsp;
 
-#### Note C
+### Note C - Selective Routes
 
 If you don't want to expose all the crud operations, be free to register as:
 
@@ -325,7 +327,7 @@ If you don't want to expose all the crud operations, be free to register as:
 router.register(r'dummy', DummyModelViewSet.as_view({'get': 'list_with_deleted'}))  # e.g.
 ```
 
-And you can always use the mixins instead and create your APIViews:
+Or use DRF mixins instead:
 
 ````python
 from rest_framework import generic
@@ -350,6 +352,10 @@ to the correct queryset the view needs.
 If you don't inherit from generic.GenericAPIView, you must be aware that, for this type of scenarios,
 you need to override the method get_queryset() to return the objects that matches your needs.
 
+&nbsp;
+
 ---
 
-Thank you for reading!
+&nbsp;
+
+Thanks for using `django-timestampable`! 🎉

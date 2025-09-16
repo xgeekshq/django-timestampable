@@ -1,14 +1,5 @@
 import uuid
-from django_fake_model import models as f
-from timestamps.models import models, SoftDeletes, Timestampable, Model
-
-
-class FooTimestamps(f.FakeModel, Timestampable):
-    ...
-
-
-class FooSoftDeletes(f.FakeModel, SoftDeletes):
-    ...
+from timestamps.models import models,  Model
 
 
 class Foo(Model):

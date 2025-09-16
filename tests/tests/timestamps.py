@@ -1,8 +1,7 @@
 from django.test import TransactionTestCase
-from tests.models import FooTimestamps as Foo
+from tests.models import Foo
 
 
-@Foo.fake_me
 class TimestampableTestCase(TransactionTestCase):
     def test_created_at_is_set_on_create(self):
         f = Foo()
@@ -23,15 +22,15 @@ class TimestampableTestCase(TransactionTestCase):
         f.save()
 
         updated_at = f.updated_at
-        
+
         f.save()
-        self.assertNotEquals(updated_at, f.updated_at)
+        self.assertNotEqual(updated_at, f.updated_at)
 
     def test_created_at_is_not_set_on_update(self):
         f = Foo()
         f.save()
 
         created_at = f.created_at
-        
+
         f.save()
-        self.assertEquals(created_at, f.created_at)
+        self.assertEqual(created_at, f.created_at)
